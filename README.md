@@ -1,2 +1,4 @@
-# NYC Data Science Academy blogs
-This contains blog posts for [NYC Data Science](https://nycdatascience.com/blog/)
+# Blog Posts
+Create html blog posts from markdown files using pandoc
+
+This repo contains blog posts posted on [NYC Data Science](https://nycdatascience.com/blog/) as well as personal articles
