@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Author Rishi Goutam" />
+  <meta name="dcterms.date" content="2022-04-06" />
+  <title>Pandoc Markdown Syntax Reference</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Pandoc Markdown Syntax Reference</h1>
+<p class="author">Author Rishi Goutam</p>
+<p class="date">April 6, 2022</p>
+</header>
+<h2 id="file-conversion">File Conversion</h2>
+<p>Run the below to convert this markdown file (saved as
+<code>pandoc-reference.md</code>) to a
+<code>pandoc-reference.html</code></p>
+<pre><code>pandoc -s --extract-media=media --from=markdown+fenced_code_blocks+backtick_code_blocks+fancy_lists+startnum+table_captions+simple_tables+multiline_tables+grid_tables+pipe_tables+pandoc_title_block+intraword_underscores+strikeout+superscript+subscript+inline_code_attributes+tex_math_dollars+link_attributes+implicit_figures+footnotes+inline_notes+emoji+task_lists+intraword_underscores  --to=html5 pandoc-reference.md -o pandoc-reference.html</code></pre>
+<p>We can check out the Pandoc extensions used in the <a
+href="https://pandoc.org/MANUAL.html">Pandoc Manual</a></p>
+<h2 id="tables">Tables</h2>
+<p>Note: We need a line break before a creating a table</p>
+<p>This is a pipe table</p>
+<table>
+<thead>
+<tr class="header">
+<th>Syntax</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Header</td>
+<td>Title</td>
+</tr>
+<tr class="even">
+<td>Paragraph</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>Use <code>:</code> in the second row under the headers to tell
+markdown align columns</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Right</th>
+<th style="text-align: left;">Left</th>
+<th>Default</th>
+<th style="text-align: center;">Center</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">12</td>
+<td>12</td>
+<td style="text-align: center;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">123</td>
+<td style="text-align: left;">123</td>
+<td>123</td>
+<td style="text-align: center;">123</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">1</td>
+<td>1</td>
+<td style="text-align: center;">1</td>
+</tr>
+</tbody>
+</table>
+<p>This is a table with where we can be lazy by not manually specifying
+widths. We also omit pipes around the edges</p>
+<table>
+<thead>
+<tr class="header">
+<th>fruit</th>
+<th style="text-align: right;">price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>apple</td>
+<td style="text-align: right;">2.05</td>
+</tr>
+<tr class="even">
+<td>pear</td>
+<td style="text-align: right;">1.37</td>
+</tr>
+<tr class="odd">
+<td>orange</td>
+<td style="text-align: right;">3.09</td>
+</tr>
+</tbody>
+</table>
+<h2 id="font-styles">Font styles</h2>
+<p>Text can be <strong>emphasized</strong> using two underscores. Text
+can also be <strong>emphasized</strong> with two asterisks
+<code>**</code></p>
+<p>Text can be <strong><em>italicized</em></strong> with three
+underscores <code>__</code></p>
+<p>A part of a word can be empha<em>sized</em> as well</p>
+<p><del>Struck through</del> text using two tilde <code>~</code>
+symbols</p>
+<p>Text can be <u>underlined</u></p>
+<p><span class="smallcaps">We can</span> begin a paragraph with small
+caps.</p>
+<p>Note: Use the below if we do not have the <code>.smallcaps</code>
+class (such as when using pandoc without the <code>--standalone</code>
+flag)</p>
+<p><code>&lt;span style="font-variant:small-caps;"&gt;Small caps&lt;/span&gt;</code></p>
+<p>We can create <mark>highlighted text</mark> using the
+<code>&lt;mark&gt;...&lt;/mark&gt;</code> tag</p>
+<p>We can create subscripts (H<sub>2</sub>O) as well as superscripts
+(X<sup>2</sup>). E.g., <code>H~2~0</code> and <code>X^2^</code></p>
+<h2 id="lists">Lists</h2>
+<p><strong>Checklists</strong> Project milestones:</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked="" />
+Create project</li>
+<li><input type="checkbox" disabled="" />
+Write project blog posts</li>
+<li><input type="checkbox" disabled="" />
+Share online</li>
+</ul>
+<p><strong>Unordered list</strong> Some big technology firms:</p>
+<ul>
+<li>Amazon</li>
+<li>Microsoft</li>
+<li>Apple</li>
+<li>Google</li>
+</ul>
+<p><strong>Ordered list</strong> Steps to create a data science
+project:</p>
+<ol type="1">
+<li>Clean and merge datasets</li>
+<li>Conduct exploratory data analysis</li>
+<li>Manipulate data to suit models and visualizations</li>
+<li>Create predictive models</li>
+<li>Visualize data</li>
+<li>Present insights</li>
+</ol>
+<p><strong>Fancy lists</strong></p>
+<p>We can use Roman numeral or alphabetical lists. Enclose the list
+markers in parentheses, or follow the marker up with a <code>)</code> or
+<code>.</code></p>
+<ol type="i">
+<li>foo</li>
+<li>bar</li>
+<li>baz</li>
+</ol>
+<p>Capital letters must have two spaces after the <code>)</code> or
+<code>.</code></p>
+<ol type="I">
+<li>foo</li>
+<li>bar</li>
+<li>baz</li>
+</ol>
+<p>Lists can also start at a specific number or letter. Subsequent list
+markers do not need to be specified directly and <code>#.</code> can be
+used</p>
+<ol start="3" type="a">
+<li>charlie</li>
+<li>delta
+<ol start="4" type="i">
+<li>subfour</li>
+<li>subfive</li>
+<li>subsix</li>
+</ol></li>
+<li>echo</li>
+</ol>
+<p><strong>Definition lists</strong></p>
+<p>Definitions can be created in markdown with optional inline
+formatting:</p>
+<dl>
+<dt>Recurrent neural network (RNN)</dt>
+<dd>
+A recurrent neural network is a class of artificial neural networks
+where connections between nodes form a directed or undirected graph
+along a temporal sequence
+</dd>
+<dt>Long Short-Term Memory (LSTM)</dt>
+<dd>
+This is one definition of LSTM. A PhD in mathematics is needed to
+understand it.
+</dd>
+<dd>
+<p>Here is a second definition for LSTM for a general audience. It has
+multiple paragraphs.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lstm_model():</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
+Third paragraph of definition 2.
+</dd>
+</dl>
+<p><strong>Example lists</strong></p>
+<p>Sequentially numbered examples can be placed in the document. They do
+not need to be in a single list. They do need to be separated from a
+paragraph by a line break.</p>
+<p>The Indo-European languages are a language family native to the
+overwhelming majority of Europe, the Iranian Plateau, and the northern
+Indian subcontinent. The Indo-Iranian branch comprises of early
+languages such as:</p>
+<ol class="example" type="1">
+<li>Sanskrit (संस्कृत)</li>
+<li>Avestan (historically known as Zend)</li>
+</ol>
+<p>These two languages have modern representatives (such as Hindustani
+and Persian, respectively). There are other early Indo-European
+languages such as:</p>
+<ol start="3" class="example" type="1">
+<li>Latin</li>
+<li>Celtic</li>
+</ol>
+<p>which have their own modern representatives (such as Portuguese and
+Irish, respectively)</p>
+<p>Example lists can be named and referred to elsewhere in the
+document</p>
+<p>An examination of (1) will show that it arose in South Asia after its
+predecessor languages had diffused there from the northwest in the late
+Bronze Age</p>
+<h2 id="emojis">Emojis</h2>
+<p>We ❤️ emojis <span class="emoji" data-emoji="joy">😂</span>. We can
+either copy/paste an emoji or use its shortcut like so:
+<code>:joy:</code></p>
+<p><a href="https://emojipedia.org/">emojipedia.org</a> is a great
+resource to copy/paste emojis from 😀</p>
+<h2 id="footnotes-and-inline-notes">Footnotes and inline notes</h2>
+<p>Let’s say we are writing about a technique I found on stackoverflow,
+medium, or web<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> article. We can link to it via a
+footnote. The footnote will show up at the bottom of the page.</p>
+<p>We can also have a longer footnote<a href="#fn2" class="footnote-ref"
+id="fnref2" role="doc-noteref"><sup>2</sup></a> with multiple paragraphs
+and even code formatting. Scroll to the bottom or click the footnote
+superscript number to read the footnote. The footnote includes a link
+back to the original text</p>
+<p>Notes can also be written inline.<a href="#fn3" class="footnote-ref"
+id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<h2 id="code">Code</h2>
+<p>We can inline code <code>1+1</code> in a paragraph</p>
+<p>We can also create a code block (this is transformed into an html
+<code>&lt;pre&gt;</code> tag). Wou can also specify the language used as
+well for syntax highlighting:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> foo(someint: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    returns 1 plus the input</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    :param someint: an integer</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">+</span> someint</span></code></pre></div>
+<h2 id="images">Images</h2>
+<p>Images can be created with a <code>width</code> attribute. Images are
+inline so they can be posted side-by-side by omitting a line break
+between two (or more) images</p>
+<p>This works in most markdown formats but is not supported by
+Pandoc:</p>
+<p><code>![Memoji picture of Rishi Goutam](https://hackmd.io/_uploads/B1zQAX5X9.png =x250)</code></p>
+<p>We want to use this:</p>
+<p><code>![Memoji picture of Rishi Goutam](https://hackmd.io/_uploads/B1zQAX5X9.png){ width=250px }</code></p>
+<p><img src="media/9b799025143e13e488cbcfcebd4d1acb46bae379.png"
+width="100" alt="Memoji picture of Rishi Goutam" /> <img
+src="media/9b799025143e13e488cbcfcebd4d1acb46bae379.png" width="50"
+alt="Memoji picture of Rishi Goutam" /> <img
+src="media/9b799025143e13e488cbcfcebd4d1acb46bae379.png" width="25"
+alt="Memoji picture of Rishi Goutam" /></p>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Footnote syntax can be found <a
+href="https://www.markdownguide.org/extended-syntax/#footnotes">here</a><a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Here’s one with multiple paragraphs
+and code. Indent paragraphs to include them in the footnote.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fancy_algo():</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
+<p>Add as many paragraphs as you like. Note that we have a line break
+when we want to break up a paragraph<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>Inlines notes are easier to write,
+since you don’t have to pick an identifier and move down to type the
+note.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
