@@ -3,6 +3,10 @@ title: Pandoc Markdown Syntax Reference
 subtitle: With Tufte Pandoc CSS
 author: Rishi Goutam
 date: 'April 6, 2022'
+abstract:
+keywords:
+subject:
+description: A reference for Pandoc markdown syntax
 ---
 
 <section>
@@ -141,7 +145,7 @@ Sequentially numbered examples can be placed in the document. They do not need t
 
 The Indo-European languages are a language family native to the overwhelming majority of Europe, the Iranian Plateau, and the northern Indian subcontinent. The Indo-Iranian branch comprises of early languages such as:
 
-(@sanskrit)  Sanskrit (संस्कृत)
+(@sanskrit)  Sanskrit
 (@)  Avestan (historically known as Zend)
 
 These two languages have modern representatives (such as Hindustani and Persian, respectively). There are other early Indo-European languages such as:
@@ -157,9 +161,9 @@ An examination of (@sanskrit) will show that it arose in South Asia after its pr
 
 ## Emojis
 
-We ❤️ emojis :joy:. We can either copy/paste an emoji or use its shortcut like so: `:joy:`
+We :heart: emojis :joy:. Do not copy/paste an emoji (as that causes issues with creating a PDF from markdown via $\LaTeX$). Instead, use its shortcut like so: `:joy:`
 
-[emojipedia.org](https://emojipedia.org/) is a great resource to copy/paste emojis from 😀
+[emojipedia.org](https://emojipedia.org/) is a great resource to copy/paste emojis from :smile:
 
 ## Footnotes and inline notes
 
