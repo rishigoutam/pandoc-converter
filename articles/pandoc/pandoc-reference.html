@@ -1,32 +1,121 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Author Rishi Goutam" />
-  <meta name="dcterms.date" content="2022-04-06" />
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="Rishi Goutam">
+  <meta name="dcterms.date" content="2022-04-06">
   <title>Pandoc Markdown Syntax Reference</title>
-  <link rel="stylesheet" href="../../src/styles/pandoc.css" />
-  <link rel="stylesheet" href="../../src/styles/tufte.min.css" />
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../src/styles/tufte.css">
+  <link rel="stylesheet" href="../../src/styles/pandoc2.css">
+  <link rel="stylesheet" href="../../src/styles/pandoc-solarized.css">
+  <link rel="stylesheet" href="../../src/styles/tufte-extra.css">
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
 </head>
 <body>
-<header id="title-block-header">
+<article>
+<header>
 <h1 class="title">Pandoc Markdown Syntax Reference</h1>
-<p class="author">Author Rishi Goutam</p>
-<p class="date">April 6, 2022</p>
+<p class="subtitle">With Tufte Pandoc CSS</p>
+<p class="byline">April 6, 2022 &ndash; Rishi Goutam</p>
 </header>
-<h2 id="file-conversion">File Conversion</h2>
+<nav id="TOC">
+<ul>
+<li><a href="#file-conversion">File Conversion</a></li>
+<li><a href="#tables">Tables</a></li>
+<li><a href="#font-styles">Font styles</a></li>
+<li><a href="#lists">Lists</a></li>
+<li><a href="#emojis">Emojis</a></li>
+<li><a href="#footnotes-and-inline-notes">Footnotes and inline
+notes</a></li>
+<li><a href="#code">Code</a></li>
+<li><a href="#images">Images</a></li>
+</ul>
+</nav>
+<section>
+<p>We wish to write articles in Pandoc markdown, and publish as html5
+files.</p>
+</section>
+<section id="file-conversion" class="level2">
+<h2>File Conversion</h2>
 <p>Run the below to convert this markdown file (saved as
 <code>pandoc-reference.md</code>) to a
 <code>pandoc-reference.html</code></p>
 <pre><code>pandoc -s --extract-media=media --from=markdown+fenced_code_blocks+backtick_code_blocks+fancy_lists+startnum+table_captions+simple_tables+multiline_tables+grid_tables+pipe_tables+pandoc_title_block+intraword_underscores+strikeout+superscript+subscript+inline_code_attributes+tex_math_dollars+link_attributes+implicit_figures+footnotes+inline_notes+emoji+task_lists+intraword_underscores  --to=html5 pandoc-reference.md -o pandoc-reference.html</code></pre>
 <p>We can check out the Pandoc extensions used in the <a
 href="https://pandoc.org/MANUAL.html">Pandoc Manual</a></p>
-<h2 id="tables">Tables</h2>
+</section>
+<section id="tables" class="level2">
+<h2>Tables</h2>
 <p>Note: We need a line break before a creating a table</p>
 <p>This is a pipe table</p>
 <table>
@@ -103,7 +192,9 @@ widths. We also omit pipes around the edges</p>
 </tr>
 </tbody>
 </table>
-<h2 id="font-styles">Font styles</h2>
+</section>
+<section id="font-styles" class="level2">
+<h2>Font styles</h2>
 <p>Text can be <strong>emphasized</strong> using two underscores. Text
 can also be <strong>emphasized</strong> with two asterisks
 <code>**</code></p>
@@ -123,7 +214,9 @@ flag)</p>
 <code>&lt;mark&gt;...&lt;/mark&gt;</code> tag</p>
 <p>We can create subscripts (H<sub>2</sub>O) as well as superscripts
 (X<sup>2</sup>). E.g., <code>H~2~0</code> and <code>X^2^</code></p>
-<h2 id="lists">Lists</h2>
+</section>
+<section id="lists" class="level2">
+<h2>Lists</h2>
 <p><strong>Checklists</strong> Project milestones:</p>
 <ul class="task-list">
 <li><input type="checkbox" disabled="" checked="" />
@@ -200,7 +293,7 @@ multiple paragraphs.</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lstm_model():</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
-Third paragraph of definition 2.
+<p>Third paragraph of definition 2.</p>
 </dd>
 </dl>
 <p><strong>Example lists</strong></p>
@@ -229,38 +322,60 @@ document</p>
 <p>An examination of (1) will show that it arose in South Asia after its
 predecessor languages had diffused there from the northwest in the late
 Bronze Age</p>
-<h2 id="emojis">Emojis</h2>
+</section>
+<section id="emojis" class="level2">
+<h2>Emojis</h2>
 <p>We ❤️ emojis <span class="emoji" data-emoji="joy">😂</span>. We can
 either copy/paste an emoji or use its shortcut like so:
 <code>:joy:</code></p>
 <p><a href="https://emojipedia.org/">emojipedia.org</a> is a great
 resource to copy/paste emojis from 😀</p>
-<h2 id="footnotes-and-inline-notes">Footnotes and inline notes</h2>
+</section>
+<section id="footnotes-and-inline-notes" class="level2">
+<h2>Footnotes and inline notes</h2>
 <p>Let’s say we are writing about a technique I found on stackoverflow,
-medium, or web<a href="#fn1" class="footnote-ref" id="fnref1"
-role="doc-noteref"><sup>1</sup></a> article. We can link to it via a
-footnote. The footnote will show up at the bottom of the page.</p>
-<p>We can also have a longer footnote<a href="#fn2" class="footnote-ref"
-id="fnref2" role="doc-noteref"><sup>2</sup></a> with multiple paragraphs
-and even code formatting. Scroll to the bottom or click the footnote
-superscript number to read the footnote. The footnote includes a link
-back to the original text</p>
-<p>Notes can also be written inline.<a href="#fn3" class="footnote-ref"
-id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
-<h2 id="code">Code</h2>
+medium, or web<span
+class="sidenote-wrapper"><label for="sn-0" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-0" class="margin-toggle"/><span
+class="sidenote">Footnote syntax can be found <a
+href="https://www.markdownguide.org/extended-syntax/#footnotes">here</a><br />
+<br />
+</span></span> article. We can link to it via a footnote. The footnote
+will show up at the bottom of the page.</p>
+<p>We can also have a longer footnote<span
+class="sidenote-wrapper"><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span
+class="sidenote">Here’s one with multiple paragraphs and code. Indent
+paragraphs to include them in the footnote.<br />
+<br />
+Add as many paragraphs as you like. Note that we have a line break when
+we want to break up a paragraph<br />
+<br />
+</span></span> with multiple paragraphs and even code formatting. Scroll
+to the bottom or click the footnote superscript number to read the
+footnote. The footnote includes a link back to the original text</p>
+<p>Notes can also be written inline.<span
+class="sidenote-wrapper"><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span
+class="sidenote">Inlines notes are easier to write, since you don’t have
+to pick an identifier and move down to type the note.<br />
+<br />
+</span></span></p>
+</section>
+<section id="code" class="level2">
+<h2>Code</h2>
 <p>We can inline code <code>1+1</code> in a paragraph</p>
 <p>We can also create a code block (this is transformed into an html
 <code>&lt;pre&gt;</code> tag). Wou can also specify the language used as
 well for syntax highlighting:</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> foo(someint: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    returns 1 plus the input</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    :param someint: an integer</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">+</span> someint</span></code></pre></div>
-<h2 id="images">Images</h2>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">def</span> foo(someint: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">    returns 1 plus the input</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">    </span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">    :param someint: an integer</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">+</span> someint</span></code></pre></div>
+</section>
+<section id="images" class="level2">
+<h2>Images</h2>
 <p>Images can be created with a <code>width</code> attribute. Images are
 inline so they can be posted side-by-side by omitting a line break
 between two (or more) images</p>
@@ -275,26 +390,7 @@ src="https://hackmd.io/_uploads/B1zQAX5X9.png" width="50"
 alt="Memoji picture of Rishi Goutam" /> <img
 src="https://hackmd.io/_uploads/B1zQAX5X9.png" width="25"
 alt="Memoji picture of Rishi Goutam" /></p>
-<section class="footnotes footnotes-end-of-document"
-role="doc-endnotes">
-<hr />
-<ol>
-<li id="fn1" role="doc-endnote"><p>Footnote syntax can be found <a
-href="https://www.markdownguide.org/extended-syntax/#footnotes">here</a><a
-href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Here’s one with multiple paragraphs
-and code. Indent paragraphs to include them in the footnote.</p>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fancy_algo():</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
-<p>Add as many paragraphs as you like. Note that we have a line break
-when we want to break up a paragraph<a href="#fnref2"
-class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>Inlines notes are easier to write,
-since you don’t have to pick an identifier and move down to type the
-note.<a href="#fnref3" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
-</ol>
 </section>
+</article>
 </body>
 </html>

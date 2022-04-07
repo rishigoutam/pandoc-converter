@@ -1,6 +1,15 @@
-% Pandoc Markdown Syntax Reference
-% Author Rishi Goutam
-% April 6, 2022
+---
+title: Pandoc Markdown Syntax Reference
+subtitle: With Tufte Pandoc CSS
+author: Rishi Goutam
+date: 'April 6, 2022'
+---
+
+<section>
+
+We wish to write articles in Pandoc markdown, and publish as html5 files.
+
+</section>
 
 ## File Conversion
 Run the below to convert this markdown file (saved as `pandoc-reference.md`) to a `pandoc-reference.html`
@@ -118,10 +127,12 @@ Recurrent neural network (RNN)
 Long Short-Term Memory (LSTM)
 : This is one definition of LSTM. A PhD in mathematics is needed to understand it.
 : Here is a second definition for LSTM for a general audience. It has multiple paragraphs.
+
     ```python
     def lstm_model():
         ...
     ```
+    
     Third paragraph of definition 2.
     
 **Example lists**
@@ -177,7 +188,7 @@ We can inline code `1+1` in a paragraph
 
 We can also create a code block (this is transformed into an html `<pre>` tag). Wou can also specify the language used as well for syntax highlighting:
 
-```python
+~~~{.python .numberLines}
 def foo(someint: int) -> int:
     """
     returns 1 plus the input
@@ -185,7 +196,7 @@ def foo(someint: int) -> int:
     :param someint: an integer
     """
     return 1 + someint
-```
+~~~
 
 ## Images
 
