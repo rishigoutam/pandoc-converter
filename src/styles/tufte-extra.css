@@ -23,3 +23,8 @@ code {
 li:not(:first-child) {
     margin-top: initial;
 }
+
+/* To get Table of Contents Title to be larger 
+*/
+h3.toc-title {
+}

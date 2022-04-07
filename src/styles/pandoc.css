@@ -1,216 +1,101 @@
-html {
-    line-height: 1.5;
-    font-family: Georgia, serif;
-    font-size: 20px;
-    color: #1a1a1a;
-    background-color: #fdfdfd;
+
+/* For smart quotes */
+q { quotes: "“" "”" "‘" "’"; }
+
+/* Override section behavior.
+ * We only want the top-level <section> to have padding.
+ * This makes it easier to work with --section-divs. */
+section {
+  padding-top: initial;
+  padding-bottom: initial;
+}
+article > section {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
-body {
-    margin: 0 auto;
-    max-width: 36em;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    hyphens: auto;
-    overflow-wrap: break-word;
-    text-rendering: optimizeLegibility;
-    font-kerning: normal;
-}
+/* Make byline (date and/or author) small */
+p.byline { font-size: 1.2rem; }
 
-@media (max-width: 600px) {
-    body {
-        font-size: 0.9em;
-        padding: 1em;
-    }
 
-    h1 {
-        font-size: 1.8em;
-    }
-}
-
-@media print {
-    body {
-        background-color: transparent;
-        color: black;
-        font-size: 12pt;
-    }
-
-    p,
-    h2,
-    h3 {
-        orphans: 3;
-        widows: 3;
-    }
-
-    h2,
-    h3,
-    h4 {
-        page-break-after: avoid;
-    }
-}
-
-p {
-    margin: 1em 0;
-}
-
-a {
-    color: #1a1a1a;
-}
-
-a:visited {
-    color: #1a1a1a;
-}
-
-img {
-    max-width: 100%;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    margin-top: 1.4em;
-}
-
-h5,
-h6 {
-    font-size: 1em;
-    font-style: italic;
-}
-
-h6 {
-    font-weight: normal;
-}
-
-ol,
-ul {
-    padding-left: 1.7em;
-    margin-top: 1em;
-}
-
-li>ol,
-li>ul {
-    margin-top: 0;
-}
-
-blockquote {
-    margin: 1em 0 1em 1.7em;
-    padding-left: 1em;
-    border-left: 2px solid #e6e6e6;
-    color: #606060;
-}
-
-code {
-    font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
-    font-size: 85%;
-    margin: 0;
-}
-
-pre {
-    margin: 1em 0;
-    overflow: auto;
-}
-
-pre code {
-    padding: 0;
-    overflow: visible;
-    overflow-wrap: normal;
-}
-
-.sourceCode {
-    background-color: transparent;
-    overflow: visible;
-}
-
-hr {
-    background-color: #1a1a1a;
-    border: none;
-    height: 1px;
-    margin: 1em 0;
-}
-
+/* Simulate Pandoc's table output styles */
 table {
-    margin: 1em 0;
-    border-collapse: collapse;
-    width: 100%;
-    overflow-x: auto;
-    display: block;
-    font-variant-numeric: lining-nums tabular-nums;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
 }
-
-table caption {
-    margin-bottom: 0.75em;
-}
-
-tbody {
-    margin-top: 0.5em;
-    border-top: 1px solid #1a1a1a;
-    border-bottom: 1px solid #1a1a1a;
-}
-
 th {
-    border-top: 1px solid #1a1a1a;
-    padding: 0.25em 0.5em 0.25em 0.5em;
+  border-bottom: 1px solid black;
+}
+td, th {
+  font-size: 1.4rem;
+  padding: 10px;
+  text-align: left;
 }
 
-td {
-    padding: 0.125em 0.5em 0.25em 0.5em;
+/* Allow tables to be full width
+ * if they're wrapped in a figure.fullwidth
+ * (Easier to insert from Pandoc than manually adding table) */
+figure.fullwidth table {
+  width: 90%;
 }
 
-header {
-    margin-bottom: 4em;
-    text-align: center;
+@media (max-width: 760px) {
+  figure.fullwidth table {
+    width: 100%;
+  }
 }
 
-#TOC li {
-    list-style: none;
+/* Code blocks
+ *
+ * Code blocks with a language look like div.sourceCode > pre.sourceCode
+ * Otherwise, it's just a pre (without .sourceCode) */
+
+/* Unset the tufte-css defaults that we'd like to overwrite */
+pre > code {
+  margin-left: initial;
+  overflow-x: initial;
+  display: initial;
 }
 
-#TOC ul {
-    padding-left: 1.3em;
+.sourceCode.numberLines a:link {
+  text-decoration: initial;
+  background: initial;
+  text-shadow: initial;
 }
 
-#TOC>ul {
-    padding-left: 0;
+div.sourceCode,
+pre:not(.sourceCode) {
+  padding: 1.4rem;
+  margin: -0.7rem -1.4rem;
+  width: 55%;
+  overflow-x: auto;
 }
 
-#TOC a:not(:hover) {
-    text-decoration: none;
+.fullwidth div.sourceCode,
+.fullwidth pre:not(.sourceCode) {
+  width: 100%;
 }
 
-code {
-    white-space: pre-wrap;
+@media (max-width: 760px) {
+  div.sourceCode,
+  pre:not(.sourceCode) {
+    padding: 1.4rem 8vw;
+    margin: -0.7rem -8vw;
+    width: 100%;
+  }
+
+  .fullwidth {
+    max-width: 100%;
+  }
 }
 
-span.smallcaps {
-    font-variant: small-caps;
+/* Math formatting */
+.katex {
+  font-size: inherit !important;
 }
 
-span.underline {
-    text-decoration: underline;
-}
-
-div.column {
-    display: inline-block;
-    vertical-align: top;
-    width: 50%;
-}
-
-div.hanging-indent {
-    margin-left: 1.5em;
-    text-indent: -1.5em;
-}
-
-ul.task-list {
-    list-style: none;
-}
-
-.display.math {
-    display: block;
-    text-align: center;
-    margin: 0.5rem auto;
+/* Wrap long URLs in references */
+#refs a {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
