@@ -77,9 +77,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <link rel="stylesheet" href="../../src/styles/pandoc2.css">
   <link rel="stylesheet" href="../../src/styles/pandoc-solarized.css">
   <link rel="stylesheet" href="../../src/styles/tufte-extra.css">
-  <script
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
-  type="text/javascript"></script>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css" />
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -331,8 +346,8 @@ Bronze Age</p>
 <p>We <span class="emoji" data-emoji="heart">❤️</span> emojis <span
 class="emoji" data-emoji="joy">😂</span>. Do not copy/paste an emoji (as
 that causes issues with creating a PDF from markdown via <span
-class="math inline">\(\LaTeX\)</span>). Instead, use its shortcut like
-so: <code>:joy:</code></p>
+class="math inline">\LaTeX</span>). Instead, use its shortcut like so:
+<code>:joy:</code></p>
 <p><a href="https://emojipedia.org/">emojipedia.org</a> is a great
 resource to copy/paste emojis from <span class="emoji"
 data-emoji="smile">😄</span></p>
@@ -360,7 +375,7 @@ to the bottom or click the footnote superscript number to read the
 footnote. The footnote includes a link back to the original text</p>
 <p>Notes can also be written inline.<span
 class="sidenote-wrapper"><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span
-class="sidenote">Inlines notes are easier to write, since you don’t have
+class="sidenote">Inlines notes are easier to write, since we don’t have
 to pick an identifier and move down to type the note.<br />
 <br />
 </span></span></p>
@@ -369,7 +384,7 @@ to pick an identifier and move down to type the note.<br />
 <h2>Code</h2>
 <p>We can inline code <code>1+1</code> in a paragraph</p>
 <p>We can also create a code block (this is transformed into an html
-<code>&lt;pre&gt;</code> tag). Wou can also specify the language used as
+<code>&lt;pre&gt;</code> tag). We can also specify the language used as
 well for syntax highlighting:</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">def</span> foo(someint: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>

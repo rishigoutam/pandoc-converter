@@ -1,3 +1,5 @@
 
 .DS_Store
 pandoc.zip
+.idea/blogs.iml
+.idea/modules.xml

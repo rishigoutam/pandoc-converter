@@ -184,13 +184,13 @@ We can also have a longer footnote[^longfootnote] with multiple paragraphs and e
     Add as many paragraphs as you like. Note that we have a line break when we want to break up a paragraph
 
 Notes can also be written inline.^[Inlines notes are easier to write, since
-you don't have to pick an identifier and move down to type the
+we don't have to pick an identifier and move down to type the
 note.]
 
 ## Code
 We can inline code `1+1` in a paragraph
 
-We can also create a code block (this is transformed into an html `<pre>` tag). Wou can also specify the language used as well for syntax highlighting:
+We can also create a code block (this is transformed into an html `<pre>` tag). We can also specify the language used as well for syntax highlighting:
 
 ~~~{.python .numberLines}
 def foo(someint: int) -> int:
