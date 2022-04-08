@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="Rishi Goutam, Srikar Pamidi, James Goudreault">
+  <meta name="dcterms.date" content="2022-04-07">
+  <meta name="keywords" content="LSTM; SARIMA; Citi Bike; NYC Data
+Science Academy">
+  <title>Predicting Citi Bike Trip Demand</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../src/styles/tufte.css">
+  <link rel="stylesheet" href="../../src/styles/pandoc.css">
+  <link rel="stylesheet" href="../../src/styles/pandoc-solarized.css">
+  <link rel="stylesheet" href="../../src/styles/tufte-extra.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<article>
+<header>
+<h1 class="title">Predicting Citi Bike Trip Demand</h1>
+<p class="subtitle">Using a neural network model to predict ridership
+based on time and weather</p>
+<p class="byline">April 7, 2022 &ndash; Rishi Goutam, Srikar Pamidi,
+James Goudreault</p>
+</header>
+<section id="predicting-citi-bike-trip-demand" class="level1">
+<h1>Predicting Citi Bike Trip Demand</h1>
+<p>In this article, we show how we analyzed the Citi Bike dataset and
+built a model to predict ridership based on seasonality and weather.</p>
+<section id="introduction" class="level2">
+<h2>Introduction</h2>
+<p>Citi Bike opened in New York City in 2013<span
+class="sidenote-wrapper"><label for="sn-0" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-0" class="margin-toggle"/><span
+class="sidenote">Citi Bike operates in multiple areas and has been
+active for several years. We focused our analysis on the primary NYC
+boroughs Citi Bike operates in (Manhattan, Brooklyn, and Queens). Unless
+otherwise specified, statistics and graphics in this article are for the
+year 2019 and these boroughs <img
+src="https://hackmd.io/_uploads/B1hC_xnX9.png" /><br />
+<br />
+</span></span> and has since grown in ridership, bikes, and bike dock
+stations. Predicting demand for bikes is important for Motivate, Citi
+Bike’s parent company, in order to both reduce operating costs and
+increase ridership. Costs are incurred by having under-utilized bikes on
+the streets by wear-and-tear on bikes due to exposure to the elements or
+other forms of damage, so it is necessary to warehouse bikes if they are
+not serving riders. However, having too few a number of bikes available
+leads to a poor customer experience and loss of revenue due to
+dissatisfied customers.</p>
+<p>We aim to first understand what features drive demand and then to
+create a predictive model. Finally, we compare our model against the
+actual number of trips to evaluate its usefulness.</p>
+</section>
+<section id="analyzing-the-data" class="level2">
+<h2>Analyzing the data</h2>
+<p>We focused our exploratory data analysis on:</p>
+<ul>
+<li>Rider demographics</li>
+<li>Citi Bike’s growth and resilience in the face of COVID-19</li>
+<li>Time (Seasonality)</li>
+<li>Weather</li>
+</ul>
+<p>And determined that time and some weather conditions would make for
+good predictors for a time-series model. Here is that analysis.</p>
+<section id="demographics" class="level3">
+<h3>Demographics</h3>
+<p>By age, most riders are between 20 and 40 years and are mostly male.
+Citi Bike has two classes of riders–annual subscribers and single-ride
+or day pass purchasers. We see a default age of 50 years for riders
+purchasing one-off trips or passes in the chart below.</p>
+<p><img src="https://hackmd.io/_uploads/HkmjbY2Q5.png" /></p>
+</section>
+</section>
+</section>
+<section id="todo-fix-the-y-axis-here" class="level1">
+<h1>TODO FIX THE Y AXIS HERE:</h1>
+<p><img src="https://hackmd.io/_uploads/ByZCwthm5.png" /></p>
+<p>We can see the gender and customer type distribution through the
+much-maligned pie chart</p>
+<p><img src="https://hackmd.io/_uploads/HJmSOKn75.png" /> <img
+src="https://hackmd.io/_uploads/SJYruY27c.png" /></p>
+<section id="growth-and-resilience-of-citi-bike" class="level3">
+<h3>Growth and Resilience of Citi Bike</h3>
+<p>As the number of Citi Bike trips grows, operational efficiency is
+more important to company finances. In addition, there is need for
+accurately predicting demand and rebalancing stations effectively</p>
+<p><img src="https://hackmd.io/_uploads/rkAj_YnXq.png" /></p>
+<p>Bike stations appear to expand along subway lines…potential for
+further expansion into Brooklyn, the Bronx, or Queens?</p>
+<p><img src="https://hackmd.io/_uploads/SJXDFY3mq.png" /></p>
+<p>While Citi Bike is not used as much as mass transit in NYC, it
+offered a way for city residents to move from A to B during the pandemic
+that wasn’t in an enclosed space…perhaps this is why it didn’t see as
+sharp a drop in demand compared to the NYC subway or buses</p>
+<p><img src="https://hackmd.io/_uploads/HkI3YYn7c.png" /></p>
+</section>
+<section id="temporal-analysis" class="level3">
+<h3>Temporal Analysis</h3>
+<p>We see increased usage in the summer as one might expect, but not all
+summer days prove to have high counts.</p>
+<p>Labor Day 2019 shows reduced demand…and weather might also play an
+effect. We examine that later.</p>
+<p><img src="https://hackmd.io/_uploads/SkpMqK2m9.png"
+style="max-width=&#39;50%&#39;" /><img
+src="https://hackmd.io/_uploads/B1Rs9tn7c.png"
+style="max-width=&#39;50%&#39;" /></p>
+<p>Surprisingly, weekends, especially Sunday, seem to have lower trip
+counts on average than weekday. Sunday truly is the day of rest.</p>
+<p><img src="https://hackmd.io/_uploads/BJodoYnXc.png"
+style="max-width=&#39;50%&#39;" /><img
+src="https://hackmd.io/_uploads/HJIV2jhQ5.png"
+style="max-width=&#39;50%&#39;" /></p>
+<p>Looks like commuters make up a bulk of trips given the high trip
+counts around 8am and 5pm. This also explains the reduced number of
+trips on weekends.</p>
+</section>
+<section id="weather" class="level3">
+<h3>Weather</h3>
+<p>We began by looking at daily average temperature and found that trip
+demand is highly correlated with it. We can use this as a model
+predictor!</p>
+<p><img src="https://hackmd.io/_uploads/rJcchi2Qc.png" /></p>
+<p>We wanted to investigate whether weather conditions might have an
+effect on number of trips…however, only saw decrease for days with
+precipitation (rain/snow)</p>
+<p>Conditions like fog (all types), thunder, or haze were low in terms
+of number of days and did not have as strong an effect (although we were
+surprised by the positive effect)</p>
+<p><img src="https://hackmd.io/_uploads/ByVAno379.png" /></p>
+<p>Digging deeper into rain, we wanted to see if the amount of rain
+mattered…and it does! (as expected)</p>
+<p><img src="https://hackmd.io/_uploads/ByyeajnQc.png" /></p>
+<p>Based on this analysis, we decided to create a model incorporating
+time, average temperature, and amount of precipitation in order to
+predict the number of trips.</p>
+</section>
+<section id="trip-demand-prediction-models" class="level2">
+<h2>Trip Demand Prediction Models</h2>
+<p>We attempted two models, the first of our models is the traditional
+SARIMA model, the second was a Long Short-Term Memory Recurrent Neural
+Network (LSTM-RNN). In this, we further distinguish the models by the
+time resolution, and whether or not the model was including weather data
+(i.e. had multidimensional inputs). Notably absent from our treatment is
+a vectorized SARIMA model or SVARIMA; however, this was due to time
+considerations and the fact that LSTM-RNN models on average demonstrate
+far better performance on multidimensional time series than traditional
+models and approaches.</p>
+<p>The population data is found in in the seconds resolution; however,
+at this resolution, observations are not continously present and we have
+long gaps for many seconds of the year with zero ridership. We take a
+look at the hourly ridership data from 2019; whatever model we create
+for one year we can easily generalize to multiple years.</p>
+<p>As a preliminary assesment of the data, we look at the ridership over
+the year along different timescales–in doing so we can begin to
+understand trends and seasonality relationships within the day. Changing
+the scale of our data, as we will see, is akin to passing the “wave” of
+our time series through a low-pass filter, giving us lower frequency
+relationships. Therefore, if there is high seasonality at low timescale,
+this will be erased as we increase our timescale and aggregate over
+larger steps.</p>
+<p><img src="https://hackmd.io/_uploads/Sk1BWhhm9.png" /></p>
+<p><img src="https://hackmd.io/_uploads/B1Gsio3Qc.png" /></p>
+<p><img src="https://hackmd.io/_uploads/HJsb3ohQ5.png" /></p>
+<p>We can see from the above graphs that weekly resolution is far too
+sparse to caputure meaningful relationships. Therefore, we would like to
+build models that predict at the Hourly timescale if we can, and if not,
+then use the Daily timescale</p>
+<p>At the sub hourly timescale, the data became too unweildy and noisy
+for a years worth, let alone for the many years of data Citibike has
+available. However in future extensions of this project we would like to
+take a second level resolution for one week for one station and predict
+the ridership at that level.</p>
+<p>Our models were thus:</p>
+<ol type="1">
+<li>Hourly SARIMA, which did not converge to parameters.</li>
+<li>Daily SARIMA, which converged to parameters, but had low
+resolution.</li>
+<li>Daily LSTM-RNN, without weather, which had high RMS error.</li>
+<li>Daily LSTM-RNN with weather, which had reduced RMS error.</li>
+<li>Hourly LSTM-RNN without weather, which had great success.</li>
+<li>Hourly LSTM-RNN for a specific station, with weather.</li>
+</ol>
+<p>We compared these models by producing the Daily and Hourly RMSE and
+comparing them to find the RMSE minimizing model.</p>
+<section
+id="seasonal-differencing-autoregressive-integrated-moving-average-sarima"
+class="level3">
+<h3>Seasonal-differencing autoregressive integrated moving average
+(SARIMA)</h3>
+<p><strong>Hourly SARIMA</strong></p>
+<p>To begin, we start with a model that does not account for the
+weather, or uses deep learning, only traditional statistical metrics
+based on past data.</p>
+<p><strong>Differencing</strong></p>
+<p>Looking at the Autcorrelation and Partial Autocorrelation Function
+plots (ACF/PACF) we can find the amount of autocorrelation given various
+lags of the data.<br />
+<img src="https://hackmd.io/_uploads/rJSxz2hm5.png" /> Looking at this
+hourly ACF/PACF plot we see that there is something very strange
+occuring. While there is clear seasonality and periodicity, the
+autocorrelation becomes negative periodically as well. Furthermore, the
+Partial autocorrelation does not disappear beneath the tolerance value
+at large lags and instead we see that there is still significant new
+contribution to the autocorrelation function even at large lags. This
+does not bode particularly well for using the SARIMA approach. Let’s see
+if differencing helps remove this behavior.</p>
+<p><img src="https://hackmd.io/_uploads/B1bRb33Xq.png" /></p>
+<p>Looking at the once and twice differenced PACF plots, we can see that
+differencing twice creates a large amount of negative residue in our
+PACF plot artificially. This means using None or Once differenced data
+may yield a good model. We’ll go with singly differenced data. This
+doesn’t bode well for the model, however, since our transformed data
+ACF/PACF does not look close to the ACF/PACF of white noise, as it would
+in a good ARIMA model fit.</p>
+<p><strong>Box-Ljung</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> <span class="fu">Box.test</span>(<span class="at">type=</span><span class="st">&quot;Ljung-Box&quot;</span>, <span class="at">lag =</span> <span class="fu">log</span>(<span class="fu">length</span>(d)))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    Box<span class="sc">-</span>Ljung test</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data<span class="sc">:</span>  .</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>X<span class="sc">-</span>squared <span class="ot">=</span> <span class="dv">13310</span>, df <span class="ot">=</span> <span class="fl">9.0781</span>, p<span class="sc">-</span>value <span class="sc">&lt;</span> <span class="fl">2.2e-16</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> d.d <span class="sc">%&gt;%</span> <span class="fu">Box.test</span>(<span class="at">type=</span><span class="st">&quot;Ljung-Box&quot;</span>, <span class="at">lag =</span> <span class="fu">log</span>(<span class="fu">length</span>(d.d)))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    Box<span class="sc">-</span>Ljung test</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>data<span class="sc">:</span>  .</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>X<span class="sc">-</span>squared <span class="ot">=</span> <span class="fl">3411.1</span>, df <span class="ot">=</span> <span class="fl">9.078</span>, p<span class="sc">-</span>value <span class="sc">&lt;</span> <span class="fl">2.2e-16</span></span></code></pre></div>
+<p>Doing the Box-Ljung test on both no differencing and single
+diferencing gives us a significant Box-Ljung Score, so we are free to
+proceed building the ARIMA model. Now we add the seasonality to our
+ARIMA model.</p>
+<p><strong>Seasonal Differencing</strong></p>
+<p>We use different seasonal differencing intervals (6hrs, 12hrs, 24hrs)
+and choose as our period that interval that leaves the normalized
+ridership data looking closest to white noise.</p>
+<p><img src="https://hackmd.io/_uploads/SkpvShnQc.png" /></p>
+<p><img src="https://hackmd.io/_uploads/BJbrSnhQ9.png" /></p>
+<p><img src="https://hackmd.io/_uploads/rk5LS237c.png" /></p>
+<p>24 hour seasons (Daily) have the clearest effect on the data. Looking
+at the ACF/PACF graphs of using seasonal differencing show a better
+result, but there are still large irregularities, and the
+autocorrelations do not dissapate after large lags.</p>
+<p><img src="https://hackmd.io/_uploads/Symv823Qc.png" /></p>
+<p><img src="https://hackmd.io/_uploads/Sk2vU2hmq.png" /></p>
+<p>The twice differenced data seems only marginally better than the
+first, and adds more negative residue to the model. Therefore we stick
+to single differencing</p>
+<p><strong>Fitting</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#d = 1 , normal differencing</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#qmax = 4 , ACF gives us qmax</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#pmax = 5 , PACF gives us pmax</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#2ce differenced, 24 month seasons, with q_max_seas= 13, p_max_seas = 4</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#_______________________________________SARIMA Full</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>set <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">count</span>(hour) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">select</span>(n) <span class="sc">%&gt;%</span> <span class="fu">ts</span>()</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>DD <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>p_max <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>q_max <span class="ot">=</span> <span class="dv">7</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>p_s_max <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>q_s_max <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>per <span class="ot">=</span> <span class="dv">24</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p_max) {</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>q_max) {</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (p_seasonal <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p_s_max) {</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (q_seasonal <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>q_s_max) {</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (p <span class="sc">+</span> d <span class="sc">+</span> q <span class="sc">+</span> p_seasonal <span class="sc">+</span> DD <span class="sc">+</span> q_seasonal <span class="sc">&lt;=</span> (p_max <span class="sc">+</span> q_max <span class="sc">+</span> p_s_max <span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                                                         q_s_max <span class="sc">+</span> d <span class="sc">+</span> DD)) {</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>          model <span class="ot">&lt;-</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            <span class="fu">arima</span>(</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>              <span class="at">x =</span> set,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>              <span class="at">order =</span> <span class="fu">c</span>((p <span class="sc">-</span> <span class="dv">1</span>), d, (q <span class="sc">-</span> <span class="dv">1</span>)),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>              <span class="at">seasonal =</span> <span class="fu">list</span>(<span class="at">order =</span> <span class="fu">c</span>((p_seasonal <span class="sc">-</span> <span class="dv">1</span>), DD, (q_seasonal <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>              ), <span class="at">period =</span> per)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>          pval <span class="ot">&lt;-</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>            <span class="fu">Box.test</span>(model<span class="sc">$</span>residuals, <span class="at">lag =</span> <span class="fu">log</span>(<span class="fu">length</span>(model<span class="sc">$</span>residuals)))</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>          sse <span class="ot">&lt;-</span> <span class="fu">sum</span>(model<span class="sc">$</span>residuals <span class="sc">^</span> <span class="dv">2</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We construct our model, as shown above, and search through various
+combinations of parameters to find one that passes our residual p-test
+(i.e. does not have any correlations in the residue data; accept null
+hypothesis), and minimize the AIC complexity of the model.</p>
+<p>However, these parameters don’t converge at all. The model gets stuck
+trying to calculate even the lowest level of these. We cannot find a
+model using this, but we shouldn’t be too surprised–we had a lot of red
+flags while analyzing the data. Let’s change to the Daily scale and try
+a SARIMA Model.</p>
+</section>
+<section id="daily-sarima" class="level3">
+<h3>Daily SARIMA:</h3>
+<p><strong>Differencing</strong> <img
+src="https://hackmd.io/_uploads/SJWVjT379.png" /></p>
+<p>Unlike the ACF/PACF plot before, this gives us a seasonality that is
+reasonable to interpret. We see that we have a constant seasonality in
+our ACF plot, which has a corresponding vanishing of PACF below the
+threshold as lags become larger, and as less new Autocorrelation is
+being found.</p>
+<p>We try differencing to remove the seasonality in the ACF plot. <img
+src="https://hackmd.io/_uploads/S1Tpian7q.png" /></p>
+<p><img src="https://hackmd.io/_uploads/ry00op3Xc.png" /></p>
+<p>These singly and double differenced plots look close to white noise.
+However, double differencing introduces a significant amount of negative
+residue to the data. Therefore, we stick with single differencing.</p>
+<p><strong>Box-Ljung</strong></p>
+<p>We do the Box-Ljung test to see if our autocorrelations are
+significant enough with this differencing to justify making a sarima
+model. We want to reject the null hypothesis that the autocorrelations
+are not significantly different than those normally distributed around
+the population mean of autocorrelations.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d.d <span class="sc">%&gt;%</span> <span class="fu">Box.test</span>(<span class="at">type=</span><span class="st">&quot;Ljung-Box&quot;</span>, <span class="at">lag =</span> <span class="fu">log</span>(<span class="fu">length</span>(d.d))) </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># p = 6.14e-11 for single differencing </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    Box<span class="sc">-</span>Ljung test</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>data<span class="sc">:</span>  .</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>X<span class="sc">-</span>squared <span class="ot">=</span> <span class="fl">59.058</span>, df <span class="ot">=</span> <span class="fl">5.8972</span>, p<span class="sc">-</span>value <span class="ot">=</span> <span class="fl">6.145e-11</span></span></code></pre></div>
+<p>Given this Box-Ljung test result, we can proceed to make our SARIMA
+model.</p>
+<p><strong>Seasonality</strong></p>
+<p>We try 31 day (1 month) seasons, 7 day (1 week), 5 day (1 work week),
+and 2 day periods. Recall that by seasonally differencing, we are trying
+to attain data that looks like white noise i.e. is stationary.</p>
+<p><img src="https://hackmd.io/_uploads/BycFpTn75.png" /></p>
+<p><img src="https://hackmd.io/_uploads/SkEbC6hX9.png" /></p>
+<p><img src="https://hackmd.io/_uploads/rJ2Z0anQ9.png" /></p>
+<p><img src="https://hackmd.io/_uploads/Hy8z0ThX5.png" /></p>
+<p>Looking at the plots, we can see that our best seasonality is found
+in the two day timeframe, with a close second at 5 and 7 day
+seasonality. Comparing their ACF/PACF plots below:</p>
+<p><img src="https://hackmd.io/_uploads/HkeZJAhmq.png" /></p>
+<p><img src="https://hackmd.io/_uploads/rJDWyRh75.png" /></p>
+<p><img src="https://hackmd.io/_uploads/BkTZk02Q9.png" /></p>
+<p>We can conclude that using seven-day seasonality is probably the
+best, even though it does not give us the most stationary differencing,
+because it adds the least additional residue artificially in the PACF
+plots, which is an indication of overfitting.</p>
+<p><strong>Model</strong></p>
+<p>We now have all the information we need to find our optimal model
+parameters.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#d = 1 , normal differencing</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#qmax = 2 , ACF gives us qmax</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#pmax = 2 , PACF gives us pmax</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#1ce differenced, 4 seasons, with q_max_seas= 1, p_max_seas = 1</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#_______________________________________SARIMA Full</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>set <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">count</span>(day) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">select</span>(n) <span class="sc">%&gt;%</span> <span class="fu">ts</span>()</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>d<span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>DD<span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>p_max<span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>q_max<span class="ot">=</span><span class="dv">3</span> </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>p_s_max<span class="ot">=</span><span class="dv">2</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>q_s_max<span class="ot">=</span><span class="dv">2</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>per<span class="ot">=</span> <span class="dv">7</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(p <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p_max){</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>q_max){</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(p_seasonal <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p_s_max){</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(q_seasonal <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>q_s_max){</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(p<span class="sc">+</span>d<span class="sc">+</span>q<span class="sc">+</span>p_seasonal<span class="sc">+</span>DD<span class="sc">+</span>q_seasonal<span class="sc">&lt;=</span>(p_max<span class="sc">+</span>q_max<span class="sc">+</span>p_s_max<span class="sc">+</span>q_s_max<span class="sc">+</span>d<span class="sc">+</span>DD)){</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>          model<span class="ot">&lt;-</span><span class="fu">arima</span>(<span class="at">x=</span>set, <span class="at">order =</span> <span class="fu">c</span>((p<span class="dv">-1</span>),d,(q<span class="dv">-1</span>)), <span class="at">seasonal =</span> <span class="fu">list</span>(<span class="at">order=</span><span class="fu">c</span>((p_seasonal<span class="dv">-1</span>),DD,(q_seasonal<span class="dv">-1</span>)), <span class="at">period=</span>per))</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>          pval<span class="ot">&lt;-</span><span class="fu">Box.test</span>(model<span class="sc">$</span>residuals, <span class="at">lag=</span><span class="fu">log</span>(<span class="fu">length</span>(model<span class="sc">$</span>residuals)))</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>          sse<span class="ot">&lt;-</span><span class="fu">sum</span>(model<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>          <span class="fu">cat</span>(p<span class="dv">-1</span>,d,q<span class="dv">-1</span>,p_seasonal<span class="dv">-1</span>,DD,q_seasonal<span class="dv">-1</span>,per, <span class="st">&#39;AIC=&#39;</span>, model<span class="sc">$</span>aic, <span class="st">&#39; SSE=&#39;</span>,sse,<span class="st">&#39; p-VALUE=&#39;</span>, pval<span class="sc">$</span>p.value,<span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>After running the loop above, we receive the results below: we can
+only choose those that have p-values which make us reject the
+alternative hypothesis and accept the null hypothesis, for these models
+have no significant trends in their residuals, and have captured the
+data’s patterns well.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">8093.003</span>  SSE<span class="ot">=</span> <span class="dv">145542442362</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">2.449596e-12</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7900.616</span>  SSE<span class="ot">=</span> <span class="dv">78139054119</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">1.415534e-13</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">8019.592</span>  SSE<span class="ot">=</span> <span class="fl">1.17339e+11</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">8.992806e-15</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7900.593</span>  SSE<span class="ot">=</span> <span class="dv">77926049526</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">2.563505e-13</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7965.833</span>  SSE<span class="ot">=</span> <span class="dv">100341574312</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">2.174389e-05</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7766.01</span>  SSE<span class="ot">=</span> <span class="dv">53256832791</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.1580151</span> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7873.321</span>  SSE<span class="ot">=</span> <span class="dv">76650546235</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.002042164</span> </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7768.009</span>  SSE<span class="ot">=</span> <span class="dv">53333608968</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.1579503</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7945.996</span>  SSE<span class="ot">=</span> <span class="dv">94400139286</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.2509538</span> </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7762.23</span>  SSE<span class="ot">=</span> <span class="dv">53386356470</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.7210931</span> </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7861.747</span>  SSE<span class="ot">=</span> <span class="dv">73799152343</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.1976797</span> </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7764.062</span>  SSE<span class="ot">=</span> <span class="dv">53263786824</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.7258721</span> </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">8031.964</span>  SSE<span class="ot">=</span> <span class="dv">121922910749</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">7.977976e-08</span> </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7830.021</span>  SSE<span class="ot">=</span> <span class="dv">63723886594</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">2.929021e-06</span> </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7947.96</span>  SSE<span class="ot">=</span> <span class="dv">95357172998</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">3.547598e-07</span> </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7831.23</span>  SSE<span class="ot">=</span> <span class="dv">63700528510</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">3.495699e-06</span> </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7941.309</span>  SSE<span class="ot">=</span> <span class="dv">93170173485</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.713379</span> </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7761.436</span>  SSE<span class="ot">=</span> <span class="dv">53381920877</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.821252</span> </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7858.621</span>  SSE<span class="ot">=</span> <span class="dv">73160746869</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.3871591</span> </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7763.162</span>  SSE<span class="ot">=</span> <span class="dv">53251964663</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.8333338</span> </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7942.432</span>  SSE<span class="ot">=</span> <span class="dv">92941926050</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.7958765</span> </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7763.211</span>  SSE<span class="ot">=</span> <span class="dv">53394595014</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.8631816</span> </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7859.434</span>  SSE<span class="ot">=</span> <span class="dv">72919303794</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.5261746</span> </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span> <span class="dv">7</span> AIC<span class="ot">=</span> <span class="fl">7764.888</span>  SSE<span class="ot">=</span> <span class="dv">53258078603</span>  p<span class="sc">-</span>VALUE<span class="ot">=</span> <span class="fl">0.8779478</span> </span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#SARIMA(1 1 1 0 1 1 7) AIC= 7761.436  SSE= 53381920877  p-VALUE= 0.821252 </span></span></code></pre></div>
+<p><img src="https://hackmd.io/_uploads/HJZv-Rhmq.png" /></p>
+<ul>
+<li>Converges to parameters</li>
+<li>Prediction and visualization</li>
+<li>Daily RMSE, avg hourly RMSE</li>
+<li>Hypothesis and next step for model</li>
+</ul>
+</section>
+<section id="long-short-term-memory-recurrent-neural-network-lstm"
+class="level3">
+<h3>Long short-term memory recurrent neural network (LSTM)</h3>
+<p><strong>Intro to RNN and LSTMRNN</strong></p>
+<p><strong>Moving from SARIMA to LSTMRNN</strong></p>
+<p><strong>Timeseries and Backtesting</strong></p>
+</section>
+<section id="daily-lstmrnn-with-hourly-weather" class="level3">
+<h3>Daily LSTMRNN with hourly weather,</h3>
+<ul>
+<li>EDA and visuals</li>
+<li>Seasonality, ACF, periodicity,</li>
+<li>Structure of Layers and LSTMRNN</li>
+<li>Backtesting and Visualization</li>
+<li>Predictions and visualization</li>
+<li>Daily RMSE and av hourly RMSE</li>
+<li>Hypothesis and next step to improve</li>
+</ul>
+</section>
+<section id="daily-lstmrnn-with-weather" class="level3">
+<h3>Daily LSTMRNN with weather</h3>
+<ul>
+<li>Weather EDA, why we think to add temp and precipitation.</li>
+<li>Seasonality ACF periodicity,</li>
+<li>Layerstructure and adding more dimesions for lag</li>
+<li>Predictions and Vis.</li>
+<li>Daily RMSE and av hourly RMSE</li>
+<li>Hypothesis and next step to improve</li>
+</ul>
+</section>
+<section id="hourly-lstmrnn-without-weather" class="level3">
+<h3>Hourly LSTMRNN without weather</h3>
+<ul>
+<li>Hourly EDA, for busiest station.</li>
+<li>Seasonality ACF periodicity,</li>
+<li>Layerstructure and adding more dimesions for lag</li>
+<li>Predictions and Vis.</li>
+<li>Daily RMSE and av hourly RMSE</li>
+<li>Hypothesis and next step to improve</li>
+</ul>
+</section>
+<section id="hourly-lstmrnn-for-a-specific-station-with-weather"
+class="level3">
+<h3>Hourly LSTMRNN for a specific station, with weather</h3>
+<ul>
+<li>Hourly Weather EDA, why we think to add temp and precipitation.</li>
+<li>Seasonality ACF periodicity,</li>
+<li>Layerstructure and adding more dimesions for lag</li>
+<li>Predictions and Vis.</li>
+<li>Daily RMSE and av hourly RMSE</li>
+<li>Hypothesis and next step to improve</li>
+</ul>
+</section>
+<section id="conclusion" class="level3">
+<h3>Conclusion</h3>
+<p>Our exploratory data analysis informed our model feature selection
+and we attempted two time-series models (SARIMA and LSTM) to predict
+trip demand on both an hourly and daily basis. We found that hourly
+models were better overall. Further improvements to the model would be
+in reducing the root mean square error in predictions and, perhaps,
+incorporating additional predictors.</p>
+</section>
+</section>
+</section>
+<section id="todo-link-to-thingy" class="level1">
+<h1>TODO LINK TO THINGY</h1>
+<p>Separately, we analyzed bike rebalancing. You can read the full
+write-up here.</p>
+</section>
+</article>
+</body>
+</html>
