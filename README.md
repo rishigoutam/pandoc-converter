@@ -1,10 +1,10 @@
-# Generating articles from Pandoc markdown files
+# [goutam.io](https://goutam.io) blog posts
+This is a repository of personal project write-ups[^nycdsa] and blog posts for [goutam.io](https://goutam.io)
 
-```python
-def foo():
-    return 1
-```
+The workflow is made possible with [^pandoc]Pandoc and [^tufte-css]Tufte CSS.
 
+### Generating articles from [`Pandoc markdown`](https://garrettgman.github.io/rmarkdown/authoring_pandoc_markdown.html)
+There is a lot of benefit to having content written in markdown. Primarily, it allows one to spend less time customizing the look via <img src="https://render.githubusercontent.com/render/math?math=\LaTeX" style="max-width: 100%;"> a WYSIWYG editor such as Wordpress or Microsoft Office tools and more time actually writing. Although it took several days to set up this project, it was time well spent.
 ```mermaid
 pie 
     title Using Pandoc Markdown to Create Blog Posts
@@ -13,9 +13,7 @@ pie
          "Time spent styling" : 5
 ```
 
-This workflow made possible [^pandoc]Pandoc and [^tufte-css]Tufte CSS. This is a repository of my blog posts and project write-ups[^nycdsa].
-
-[^pandoc]: [Pandoc](https://pandoc.org/MANUAL.html) (and several filters) process the Pandoc markdown files. Filters include:
+[^pandoc]: [Pandoc](https://pandoc.org/MANUAL.html) (and several filters) process the Pandoc markdown files. I am using [pypandoc](https://pypi.org/project/pypandoc/) as a Pandoc wrapper. Filters include:
     [pandoc-sidenote](https://github.com/jez/pandoc-sidenote)
     [mermaid-filter](https://github.com/raghur/mermaid-filter)
     [pandoc-plot](https://laurentrdc.github.io/pandoc-plot/MANUAL.html)
