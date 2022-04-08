@@ -5,7 +5,7 @@ This repo contains blog posts posted on [NYC Data Science](https://nycdatascienc
 
 ```mermaid
 flowchart LR
-    markdown[my-article.md :abcd: &amp#x1F619]:::input
+    markdown["🥰 my-article.md :abcd: &amp#x1F619"]:::input
     classDef input fill:#f96;
     
     subgraph pypandoc [pypandoc converter :smile: fa:fa-user]
