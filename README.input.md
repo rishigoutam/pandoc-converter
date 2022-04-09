@@ -4,7 +4,8 @@ This is a repository of personal project write-ups[^nycdsa] and blog posts for [
 The workflow is made possible with [^pandoc]Pandoc and [^tufte-css]Tufte CSS.
 
 ### Generating articles from [`Pandoc markdown`](https://garrettgman.github.io/rmarkdown/authoring_pandoc_markdown.html)
-There is a lot of benefit to having content written in markdown. Primarily, it allows one to spend less time customizing the look via $\LaTeX$ a WYSIWYG editor such as Wordpress or Microsoft Office tools and more time actually writing. Although it took several days to set up this project, it was time well spent.
+There is a lot of benefit to having content written in markdown. Primarily, it allows one to spend less time customizing the look via $\pi$ a WYSIWYG editor such as Wordpress or Microsoft Office tools and more time actually writing. Although it took several days to set up this project, it was time well spent.
+
 ```mermaid
 pie 
     title Using Pandoc Markdown to Create Blog Posts
@@ -24,6 +25,7 @@ pie
 [^nycdsa]: This repo contains blog posts cross-posted on [NYC Data Science](https://nycdatascience.com/blog/) as well as personal articles
 
 ### File Conversion Process
+
 ```mermaid
 flowchart TB
     classDef input fill:aliceblue;
