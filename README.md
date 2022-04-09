@@ -6,16 +6,10 @@ The workflow is made possible with [^pandoc]Pandoc and [^tufte-css]Tufte CSS.
 ### Generating articles from [`Pandoc markdown`](https://garrettgman.github.io/rmarkdown/authoring_pandoc_markdown.html)
 There is a lot of benefit to having content written in markdown. Primarily, it allows one to spend less time customizing the look via a WYSIWYG editor such as Wordpress or Microsoft Office tools and more time actually writing. Additionally, it is simpler to use than <img src="svgs/LaTeX.svg" align=middle>. Although it took several days to set up this project, it was time well spent.
 
-![Use of Time](./time-use.gif#gh-light-mode-only)
-![Use of Time](./time-use.gif#gh-dark-mode-only)
-
-```mermaid
-pie 
-    title Using Pandoc Markdown to Create Blog Posts
-         "Time spent writing" : 80
-         "Time spent tooling" : 15
-         "Time spent styling" : 5
-```
+<center>
+![Use of Time](./time-use-light.gif#gh-light-mode-only)
+![Use of Time](./time-use-dark.gif#gh-dark-mode-only)
+</center>
 
 [^pandoc]: [Pandoc](https://pandoc.org/MANUAL.html) (and several filters) process the Pandoc markdown files. I am using [pypandoc](https://pypi.org/project/pypandoc/) as a Pandoc wrapper. Filters include:
     [pandoc-sidenote](https://github.com/jez/pandoc-sidenote)
