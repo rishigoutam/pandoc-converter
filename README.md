@@ -7,8 +7,10 @@ The workflow is made possible with [^pandoc]Pandoc and [^tufte-css]Tufte CSS.
 There is a lot of benefit to having content written in markdown. Primarily, it allows one to spend less time customizing the look via a WYSIWYG editor such as Wordpress or Microsoft Office tools and more time actually writing. Additionally, it is simpler to use than <img src="svgs/LaTeX.svg" align=middle>. Although it took several days to set up this project, it was time well spent.
 
 <center>
+
 ![Use of Time](./time-use-light.gif#gh-light-mode-only)
 ![Use of Time](./time-use-dark.gif#gh-dark-mode-only)
+
 </center>
 
 [^pandoc]: [Pandoc](https://pandoc.org/MANUAL.html) (and several filters) process the Pandoc markdown files. I am using [pypandoc](https://pypi.org/project/pypandoc/) as a Pandoc wrapper. Filters include:
