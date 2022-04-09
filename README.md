@@ -4,7 +4,7 @@ This is a repository of personal project write-ups[^nycdsa] and blog posts for [
 The workflow is made possible with [^pandoc]Pandoc and [^tufte-css]Tufte CSS.
 
 ### Generating articles from [`Pandoc markdown`](https://garrettgman.github.io/rmarkdown/authoring_pandoc_markdown.html)
-There is a lot of benefit to having content written in markdown. Primarily, it allows one to spend less time customizing the look via <img src="https://rawgit.com/rishigoutam/blogs/main/svgs/f30fdded685c83b0e7b446aa9c9aa120.svg?invert_in_darkmode" align=middle width=9.96010619999999pt height=14.15524440000002pt/> a WYSIWYG editor such as Wordpress or Microsoft Office tools and more time actually writing. Although it took several days to set up this project, it was time well spent.
+There is a lot of benefit to having content written in markdown. Primarily, it allows one to spend less time customizing the look via a WYSIWYG editor such as Wordpress or Microsoft Office tools and more time actually writing. Additionally, it is simpler to use than <img src="svgs/LaTeX.svg" align=middle>. Although it took several days to set up this project, it was time well spent.
 
 ```mermaid
 pie 
