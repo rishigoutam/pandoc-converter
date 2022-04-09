@@ -6,6 +6,8 @@ The workflow is made possible with [^pandoc]Pandoc and [^tufte-css]Tufte CSS.
 ### Generating articles from [`Pandoc markdown`](https://garrettgman.github.io/rmarkdown/authoring_pandoc_markdown.html)
 There is a lot of benefit to having content written in markdown. Primarily, it allows one to spend less time customizing the look via a WYSIWYG editor such as Wordpress or Microsoft Office tools and more time actually writing. Additionally, it is simpler to use than <img src="svgs/LaTeX.svg" align=middle>. Although it took several days to set up this project, it was time well spent.
 
+https://user-images.githubusercontent.com/1731708/162551082-d7ad7c20-86df-4a5e-8d13-f98d4dbe9211.mov
+
 ```mermaid
 pie 
     title Using Pandoc Markdown to Create Blog Posts
