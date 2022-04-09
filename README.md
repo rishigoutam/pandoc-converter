@@ -7,7 +7,7 @@ The workflow is made possible with [^pandoc]Pandoc and [^tufte-css]Tufte CSS.
 There is a lot of benefit to having content written in markdown. Primarily, it allows one to spend less time customizing the look via a WYSIWYG editor such as Wordpress or Microsoft Office tools and more time actually writing. Additionally, it is simpler to use than <img src="svgs/LaTeX.svg" align=middle>. 
 
 <p align="center">
-    <img src="./time-use-light.gif#gh-light-mode-only" /><img src="./time-use-dark.gif#gh-dark-mode-only" />
+    <img src="./gifs/time-use-light.gif#gh-light-mode-only" /><img src="./gifs/time-use-dark.gif#gh-dark-mode-only" />
     <div align="center">
         <i>The initial time investment in styling and tooling is rewarded as more posts are written</i>
     </div>
