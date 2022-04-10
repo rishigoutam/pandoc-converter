@@ -4,7 +4,10 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>citibike-rebalances</title>
+  <meta name="author" content="Rishi Goutam, Srikar Pamidi, James Goudreault">
+  <meta name="dcterms.date" content="2022-04-10">
+  <meta name="keywords" content="Citi Bike; NYC Data Science Academy">
+  <title>Improving Citi Bike Operations through Bike Rebalancing</title>
   <style type="text/css">code{white-space: pre;}</style>
   <link rel="stylesheet" href="../../src/styles/tufte.css">
   <link rel="stylesheet" href="../../src/styles/pandoc.css">
@@ -16,7 +19,236 @@
 </head>
 <body>
 <article>
-
+<header>
+<h1 class="title">Improving Citi Bike Operations through Bike
+Rebalancing</h1>
+<p class="subtitle">Using map visualizations for bike stations and
+rebalances</p>
+<p class="byline">April 10, 2022 &ndash; Rishi Goutam, Srikar Pamidi,
+James Goudreault</p>
+</header>
+<section id="summary" class="level2">
+<h2>Summary</h2>
+<ul>
+<li>locations</li>
+<li>bike angels program successful</li>
+<li>elevation matters</li>
+</ul>
+</section>
+<section id="rebalance-operations" class="level2">
+<h2>Rebalance Operations</h2>
+<section id="what-is-rebalancing-why-do-we-care" class="level3">
+<h3>What is rebalancing? Why do we care?</h3>
+<p>Citi Bike faces a perpetual dillemma - how can they ensure there are
+enough bikes in the right places to satisfy rider demand? Will the
+natural flow of bikes from rider be enough?</p>
+<p>Consider the flow of bikes through a popular commuter station on a
+weekday:</p>
+<figure>
+<img src="https://hackmd.io/_uploads/B1Cspm979.jpg"
+alt="Commuter-Station-Bike-Flow" />
+<figcaption aria-hidden="true">Commuter-Station-Bike-Flow</figcaption>
+</figure>
+<p>The blue line represents the cumulative change in quantity of bikes
+at the station throughout the day. The gray and red lines represent the
+typical and maximum high-volume dock station capacities
+respectively.</p>
+<p>Even if the station were to naturally start each day fully stocked,
+the station would be depleted halfway through morning commuter hours
+with significant remaining demand. Someone needs to bring in more bikes
+so all riders can get to work - and conversely shuffle them away at the
+end of the day…</p>
+<p>Simply put, rebalancing is the manual movement of bikes from one
+station to another to: - ensure there are sufficient bikes at each dock
+station to satisfy predicted demand - ensure there is space at ending
+dock station to receive incoming bikes - minimize number of
+underutilized bikes sitting at unpopular locations</p>
+</section>
+<section id="how-does-citi-bike-rebalance" class="level3">
+<h3>How does Citi Bike Rebalance?</h3>
+<p>Citi Bike employs several methods to manage rebalancing needs:</p>
+<ul>
+<li><em>Valet Service</em> - team members staff popular stations to
+manage incoming and outgoing bikes, artificially elevating station
+capacity and temporarily alleviating rush-hour problems</li>
+<li><em>Bike Trains</em> - team members ride ebikes towing carriages of
+12-16 bikes, ideal for rebalances in and around tight neghborhood
+streets</li>
+<li><em>Motorized Vehicles</em> - higher capacity vans operate 24/7 to
+keep bikes moving to and from the most popular stations</li>
+<li><em>Bike Angels</em> - Launched in 2018, this program grants Citi
+Bike riders (non-employees) traveling along in-demand rebalance routes a
+free trip and rewards points</li>
+</ul>
+</section>
+<section id="identifying-rebalance-movements" class="level3">
+<h3>Identifying Rebalance Movements</h3>
+<p>The Citi Bike dataset does not contain information on individual bike
+rebalances, nor is that generally available online except as aggregated
+data in monthly reports. So how can someone tell when a bike was
+rebalanced, and to where?</p>
+<figure>
+<img src="https://hackmd.io/_uploads/HkE2EN9m5.jpg"
+alt="Identifying-Rebalances" />
+<figcaption aria-hidden="true">Identifying-Rebalances</figcaption>
+</figure>
+<p>The easiest method to do so is (for a given bike) compare the
+starting station for each trip with the ending station of the previous
+trip. If the bike appears to have teleported from one station to another
+between trips, it most likely was rebalanced!</p>
+</section>
+<section id="general-rebalance-statistics" class="level3">
+<h3>General Rebalance Statistics</h3>
+<p>Predictably, the number of rebalance operations increases with number
+of rides. The large drop after 2017 coincides with the introduction of
+the Bike Angels program and clearly demonstrates how successful this
+clever initiative is.</p>
+<p><img src="https://hackmd.io/_uploads/HyMLHN9mc.jpg" width="350"
+alt="Rides-vs-Rebalances" /> <img
+src="https://hackmd.io/_uploads/BkctLE9Xc.png" width="350"
+alt="Rides-per-year" /></p>
+<p>For each year, almost every unique bike in service was rebalanced at
+least once and almost every station was invovled in rebalancing
+operations.</p>
+<p><img src="https://hackmd.io/_uploads/SkDsi4qX5.jpg" width="350"
+alt="rebalancing-unique-bikes" /> <img
+src="https://hackmd.io/_uploads/Hycis4qm9.jpg" width="350"
+alt="rebalancing-unique-stations" /></p>
+<p>The vast majority of rides occurred in Manhattan, so it is not
+suprising to see that is where most rebalance activity occurs. <img
+src="https://hackmd.io/_uploads/S1OGFI9X9.png"
+alt="Rebalance-By-Boro" /></p>
+<p>It is important to note that bikes are rebalaced around and across
+all Boros - confirming Citi Bike actively works to satisfy all rider
+demand. <img src="https://hackmd.io/_uploads/ryYuFUc79.png"
+alt="Log-Rebalance-By-Boro" /></p>
+<p>Individual stations with the highest rebalanace activity are mostly
+commuter stations. Many have both a high number of bikes moved to and
+from them based on commuter demands as shown above. <img
+src="https://hackmd.io/_uploads/BkEV6dhX9.png"
+alt="Stations-Rebalance" /></p>
+</section>
+<section id="rebalance-routes" class="level3">
+<h3>Rebalance Routes</h3>
+<p>We can glean more information about rebalance operations if we look
+not just at bikes moving to and from individual stations, but consider
+pairwise movement between two stations.</p>
+<figure>
+<img src="https://hackmd.io/_uploads/HJhBaLqXq.png"
+alt="Rebalance-Routes" />
+<figcaption aria-hidden="true">Rebalance-Routes</figcaption>
+</figure>
+<p>Not only is the majority of rebalance activity focused on a small
+number of stations in Manhattan, most of it occurs between a small
+number of station pairs. This makes sense in the context of commuter
+bike flow, where there is a need for a constant flow of bikes away from
+destination stations to origin stations to keep up with demand.</p>
+<p>Notice that some of the top routes are just the reverse direction of
+others. Visualizing bi-directional flow between station pairs further
+emphasizes how critical rebalance operations are between a small number
+of station pairs.</p>
+<figure>
+<img src="https://hackmd.io/_uploads/S1nzCI979.png"
+alt="Bi-Directional-Rebalance-Routes" />
+<figcaption
+aria-hidden="true">Bi-Directional-Rebalance-Routes</figcaption>
+</figure>
+<p>It should be noted that rebalance operations are probably more
+nuanced then bikes being moved along static ‘routes’ - it’s very
+possible a van will stop at several stations along a circuit - but this
+aggregate analysis still helps us understand how much effort and expense
+is required to support the highest volume stations.</p>
+<p>Perhaps the most intersting way to look at station related rebalance
+data is visualized on a map - check out our dash app to see this for
+2019!</p>
+</section>
+<section id="rebalance-timing" class="level3">
+<h3>Rebalance Timing</h3>
+<p>We don’t know precisely when a bike was rebalanced, only when a trip
+started after the bike was rebalanced These time estimates (in hours)
+all reflect the maximum time a rebalance operation could take. We can
+conclusively say a good part of Citi Bike rebalancing is done to
+alleviate immediate demand, such as during commutes.</p>
+<figure>
+<img src="https://hackmd.io/_uploads/r1La58cX9.png" width="350"
+alt="Rebalance-Timing" />
+<figcaption aria-hidden="true">Rebalance-Timing</figcaption>
+</figure>
+<p>Again, it appears that the Bike Angels program and Valet Service had
+profound impacts on the need for immediate rebalances. <img
+src="https://hackmd.io/_uploads/SyWzoL5X9.png"
+alt="Rebalance-Timing-YearFacet" /></p>
+<p>It appears that there are different reblance strategies used for
+popular stations. Some seem to have the majority of rebalances done
+overnight while others seem to be more frequently rebalanced for
+immediate use. Both modes are necessary to keep up with demand. <img
+src="https://hackmd.io/_uploads/r1ZQaKh75.png"
+alt="Rebalance-Timing-Stations" /></p>
+<p>Investigating timing for rebalance routes provides deeper insight,
+where we can see some routes are used to stock stations overnight for
+the next day’s commute and others are used to satisfy immediate demand.
+<img src="https://hackmd.io/_uploads/ryMH6t2m9.png"
+alt="Rebalance-Timing-Station-Pairs" /></p>
+</section>
+<section id="seasonality" class="level3">
+<h3>Seasonality</h3>
+<p>As expected, rebalance activity tracks with ridership where most of
+the activity occurs in the summer months. The Bike Angel program
+launched in 2018 had a profound effect on flattening this trend compared
+to previous years.</p>
+<figure>
+<img src="https://hackmd.io/_uploads/SkoCY8cmc.png"
+alt="Annual-Rebalance-Season" />
+<figcaption aria-hidden="true">Annual-Rebalance-Season</figcaption>
+</figure>
+<p>Similarly, post Bike Angel rebalance activity tracks with ridership
+where most acitivity occurs during the week supporting commuters. <img
+src="https://hackmd.io/_uploads/HkqX585Xq.png"
+alt="Weekly-Rebalance-Season" /></p>
+</section>
+<section id="bikers-dislike-going-uphill" class="level3">
+<h3>Bikers Dislike Going Uphill</h3>
+<p>In aggregate more bikes were rebalanced from lower elevation stations
+than to, and more bikes were rebalanced to higher elevation stations
+than from. This suggests bikers who ride downhill often find other modes
+of transport for return trips.</p>
+<p><img src="https://hackmd.io/_uploads/r1KB3N5Xc.jpg" width="350"
+alt="rebalance-elevation-bins" /> <img
+src="https://hackmd.io/_uploads/By422Vqm9.png" width="350"
+alt="rebalance-elevation-density" /></p>
+<p>This becomes even more apparent when looking at a density plot of
+years pre and post launch of the Bike Angel program. In 2016, the
+difference between station elevations for rebalance movements is
+somewhat normally distributed. In 2019, there is a long right tail
+indicating significantly more bikes are rebalanced to higher elevations
+- even the Bike Angels aren’t willing to climb hills.</p>
+</section>
+<section id="future-analysis" class="level3">
+<h3>Future Analysis?</h3>
+<p>There are nearly endless ways to dive into ridership and rebalance
+data to understand needs and motivations of bikeshare participants or
+the general movement of individuals around New York. This analysis
+focused mostly on data aggregated over the years available (2014-2000)
+which helps us interpret rebalance operations as a whole. Future work
+could include:</p>
+<ul>
+<li>Focusing on a specific year, season, or days to understand and
+predict usage and rebalance needs with respect to changes in overall
+ridership and events such as holidays and professional sports games</li>
+<li>Comparing rides and rebalance statistics across years as docking
+stations are introduced, moved, or retired to evaluate past decisions
+and inform future strategy/goals</li>
+<li>Developing a predictive model to inform Citi Bike if a dock stations
+is on track to be depleted or filled and needs immediate rebalancing
+outside of normally scheduled operations, and if or how it may be
+influenced by external factors such as weather</li>
+</ul>
+</section>
+</section>
+<section id="visualizing-bike-stations-and-rebalances" class="level2">
+<h2>Visualizing Bike Stations and Rebalances</h2>
+<p>look at our dash app!</p>
+</section>
 </article>
 </body>
 </html>
