@@ -1,3 +1,6 @@
+# NOTE: I use Gatsby.js now for my site.
+This workflow is still useful for creating standalone HTML files or PDFs (and Word eventually)
+
 # [goutam.io](https://goutam.io) blog posts
 This is a repository of personal project write-ups[^nycdsa] and blog posts for [goutam.io](https://goutam.io)
 
