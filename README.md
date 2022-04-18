@@ -1,8 +1,9 @@
-# NOTE: I use Gatsby.js now for my site.
+# NOTE: 
+I use Gatsby.js now for [my site](goutam.io).
 This workflow is still useful for creating standalone HTML files or PDFs (and Word eventually)
 
-# [goutam.io](https://goutam.io) blog posts
-This is a repository of personal project write-ups[^nycdsa] and blog posts for [goutam.io](https://goutam.io)
+# Pandoc Markdown to HTML (and other formats)
+This is a repository demonstrating converting markdown to HTML. It contains early drafts of personal project write-ups[^nycdsa] and blog posts for [goutam.io](https://goutam.io)
 
 The workflow is made possible with [^pandoc]Pandoc and [^tufte-css]Tufte CSS.
 
