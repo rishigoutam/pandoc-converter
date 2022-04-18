@@ -1,4 +1,4 @@
-# NOTE: 
+# NOTE
 I use Gatsby.js now for [my site](goutam.io).
 This workflow is still useful for creating standalone HTML files or PDFs (and Word eventually)
 
